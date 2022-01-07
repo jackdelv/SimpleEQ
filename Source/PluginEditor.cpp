@@ -163,8 +163,9 @@ ResponseCurveComponent::ResponseCurveComponent(SimpleEQAudioProcessor& p) : audi
     {
         param->addListener(this);
     }
+    updateChain();
     
-    startTimer(60);
+    startTimerHz(60);
 }
 
 ResponseCurveComponent::~ResponseCurveComponent()
@@ -174,6 +175,19 @@ ResponseCurveComponent::~ResponseCurveComponent()
     {
         param->removeListener(this);
     }
+}
+
+void ResponseCurveComponent::updateChain()
+{
+    auto chainSettings = getChainSettings(audioProcessor.apvts);
+    auto peakCoefficients = makePeakFilter(chainSettings, audioProcessor.getSampleRate());
+    updateCoefficients(monoChain.get<ChainPositions::Peak>().coefficients, peakCoefficients);
+    
+    auto lowCutCoefficients = makeLowCutFiter(chainSettings, audioProcessor.getSampleRate());
+    auto highCutCoefficients = makeHighCutFiter(chainSettings, audioProcessor.getSampleRate());
+    
+    updateCutFilter(monoChain.get<ChainPositions::LowCut>(), lowCutCoefficients, chainSettings.lowCutSlope);
+    updateCutFilter(monoChain.get<ChainPositions::HighCut>(), highCutCoefficients, chainSettings.highCutSlope);
 }
 
 void ResponseCurveComponent::paint (juce::Graphics& g)
@@ -256,19 +270,13 @@ void ResponseCurveComponent::timerCallback()
     if (parametersChanged.compareAndSetBool(false, true))
     {
         //update monochain
-        auto chainSettings = getChainSettings(audioProcessor.apvts);
-        auto peakCoefficients = makePeakFilter(chainSettings, audioProcessor.getSampleRate());
-        updateCoefficients(monoChain.get<ChainPositions::Peak>().coefficients, peakCoefficients);
-        
-        auto lowCutCoefficients = makeLowCutFiter(chainSettings, audioProcessor.getSampleRate());
-        auto highCutCoefficients = makeHighCutFiter(chainSettings, audioProcessor.getSampleRate());
-        updateCutFilter(monoChain.get<ChainPositions::LowCut>(), lowCutCoefficients, chainSettings.lowCutSlope);
-        updateCutFilter(monoChain.get<ChainPositions::HighCut>(), highCutCoefficients, chainSettings.highCutSlope);
-        
+        updateChain();
         //signal a repaint
         repaint();
     }
 }
+
+
 
 //==============================================================================
 SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor& p)
