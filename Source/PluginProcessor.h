@@ -100,10 +100,10 @@ struct SingleChannelSampleFifo
         size.set(bufferSize);
         
         bufferToFill.setSize(1,    // channel
-                              bufferSize,   // num samples
-                              false,    // keepExistingContent
-                              true,     // clear extra space
-                              true);    // avoid reallocating
+                            bufferSize,   // num samples
+                            false,    // keepExistingContent
+                            true,     // clear extra space
+                            true);    // avoid reallocating
         audioBufferFifo.prepare(1, bufferSize);
         fifoIndex = 0;
         prepared.set(true);
@@ -112,7 +112,7 @@ struct SingleChannelSampleFifo
     bool isPrepared() const {return prepared.get();}
     int getSize() const {return size.get();}
     
-    bool getAudioBuffer(BlockType buf) {return audioBufferFifo.pull(buf);}
+    bool getAudioBuffer(BlockType& buf) {return audioBufferFifo.pull(buf);}
 private:
     Channel channelToUse;
     int fifoIndex = 0;
