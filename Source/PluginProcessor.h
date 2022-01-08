@@ -67,6 +67,7 @@ private:
     std::array<T, Capacity> buffers;
     juce::AbstractFifo fifo {Capacity};
 };
+
 enum Channel
 {
     Right, // effectively 0
@@ -87,7 +88,7 @@ struct SingleChannelSampleFifo
         jassert(buffer.getNumChannels() > channelToUse);
         auto* channelPtr = buffer.getReadPointer(channelToUse);
         
-        for (int i = 9; i < buffer.getNumSamples(); i++)
+        for (int i = 0; i < buffer.getNumSamples(); ++i)
         {
             pushNextSampleIntoFifo(channelPtr[i]);
         }
@@ -124,9 +125,9 @@ private:
     {
         if (fifoIndex == bufferToFill.getNumSamples())
         {
-            auto ch = audioBufferFifo.push(bufferToFill);
+            auto ok = audioBufferFifo.push(bufferToFill);
             
-            juce::ignoreUnused(ch);
+            juce::ignoreUnused(ok);
             
             fifoIndex = 0;
         }
