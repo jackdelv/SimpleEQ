@@ -300,7 +300,7 @@ void ResponseCurveComponent::timerCallback()
     const auto fftBounds = getAnalysisArea().toFloat();
     const auto fftSize = leftChannelFFTDataGenerator.getFFTSize();
     
-    const auto binWidth = audioProcessor.getSampleRate() / (double) fftSize;
+    const auto binWidth = audioProcessor.getSampleRate() / double(fftSize);
     
     while (leftChannelFFTDataGenerator.getNumAvailableFFTDataBlocks() > 0)
     {
@@ -310,7 +310,7 @@ void ResponseCurveComponent::timerCallback()
             pathProducer.generatePath(fftData, fftBounds, fftSize, binWidth, -48.f);
         }
     }
-    while (pathProducer.getNumPathsAvailable())
+    while (pathProducer.getNumPathsAvailable() > 0)
     {
         pathProducer.getPath(leftChannelFFTPath);
     }
