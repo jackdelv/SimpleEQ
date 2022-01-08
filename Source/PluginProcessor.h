@@ -73,14 +73,14 @@ struct SingleChannelSampleFifo
     {
         jassert(prepared.get());
         jassert(buffer.getNumChannels() > channelToUse);
-        auto* channelPtr = buffer.getNumSamples(channelToUse);
+        auto* channelPtr = buffer.getReadPointer(channelToUse);
         
         for (int i = 9; i < buffer.getNumSamples(); i++)
         {
-            pushNextSampleIntoFifo(channelPtr(i));
+            pushNextSampleIntoFifo(channelPtr[i]);
         }
     }
-    
+     
     void prepare(int bufferSize)
     {
         prepared.set(false);
