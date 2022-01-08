@@ -51,7 +51,7 @@ struct FFTDataGenerator
         
         for (int i = 0; i < numBins; ++i)
         {
-            fftData[i] /= juce::Decibels::gainToDecibels(fftData[i], negativeInfinity);
+            fftData[i] = juce::Decibels::gainToDecibels(fftData[i], negativeInfinity);
         }
         
         fftDataFifo.push(fftData);
