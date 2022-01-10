@@ -7,4 +7,4 @@ on the audio being played.
 There are toggle buttons to turn off the spectrum analyzer, lowcut and highcut filters, and the peak filter. Each toggle button also changes the display of 
 its sliders.
 
-This project was created following the tutorials from <a src=https://www.programmingformusicians.com/simpleeq/>MatKatMusic</a>.
+This project was created following the tutorials from <a href=https://www.programmingformusicians.com/simpleeq/>MatKatMusic</a>.
